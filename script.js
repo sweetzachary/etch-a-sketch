@@ -1,14 +1,17 @@
 let grid = document.getElementById('grid');
-let side = 8;
-let sidePx = 800;
+let SIDE = 8;
+let SIDEPX = 800;
 
 function createGrid(side, sidePx, grid) {
-    cellSide = `${sidePx/side}px`;
+    const cellsidenum = (sidePx/side).toFixed();
+    console.log(cellsidenum)
+    cellSide = `${cellsidenum}px`;
     for(let i = 0; i < side; i++) {
         row = document.createElement('div');
         row.style.display = 'flex';
         row.style.flexDirection = 'row';
         row.style.height = cellSide;
+        row.classList.add('row')
         for(let i = 0; i < side; i++) {
             box = document.createElement('div');
             box.style.width = cellSide;
@@ -22,13 +25,37 @@ function createGrid(side, sidePx, grid) {
         grid.appendChild(row);
     }
 }
-createGrid(side, sidePx, grid)
-
-boxes = document.querySelectorAll('.box')
-boxes.forEach(box => {
-    box.addEventListener('mouseover', becomeBlack)
-});
+createGrid(SIDE, SIDEPX, grid)
+function makeBoxesDrawable() {
+    let boxes = document.querySelectorAll('.box')
+    boxes.forEach(box => {
+        box.addEventListener('mouseover', becomeBlack)
+    });
+}
+makeBoxesDrawable();
 
 function becomeBlack(e) {
     e.target.style.backgroundColor = 'black';
+}
+newgrid = document.querySelector('button');
+newgrid.addEventListener('click', () => {grid = newGrid(grid);})
+
+function newGrid(grid) {
+    grid.remove();
+    body = document.querySelector('body');
+    newgrid = document.createElement('div');
+    newgrid.setAttribute('id', 'grid');
+    createGrid(promptGridSize(), SIDEPX, newgrid);
+    body.appendChild(newgrid);
+    makeBoxesDrawable();
+    return newgrid;
+}
+
+function promptGridSize() {
+    let size = 0;
+    while(size < 1 || size > 100 || typeof size != 'number') {
+        size = prompt('Enter new grid size between 1 and 100!');
+        size = +size;
+    }
+    return size;
 }
